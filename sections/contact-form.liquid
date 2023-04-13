@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="{{ 'contact-form.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<div class="flex contact-form-container align-center justify-center">
+  <div>
+    <h2>{{ section.settings.heading_text }}</h2>
+    <div>{{ section.settings.paragraph_text }}</div>
+  </div>
+
+  <div class="contact-form flex column">
+    {% form 'contact' %}
+      {{ form.errors | default_errors }}
+      <div class="name">
+        <input class="name_field" type="text" name="contact[first_name]" id="first-name" placeholder="Name">
+      </div>
+
+      <div class="email">
+        <input class="email__field" type="email" name="contact[email]" id="email" placeholder="Email">
+      </div>
+
+      <div class="message">
+        <textarea class="message__field" name="contact[body]" id="message" placeholder="Message"></textarea>
+      </div>
+
+      <div class="additional_text">{{ section.settings.additional_text }}</div>
+
+      <div class="submit">
+        <input class="submit__button" type="submit" value="SEND">
+      </div>
+    {% endform %}
+  </div>
+</div>
+
+{% style %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading Text",
+      "default": "Welcome to our world"
+    },
+     {
+       "type": "textarea",
+       "id": "paragraph_text",
+       "label": "Description Text",
+       "default": "<p>Welcome to my shop</p>"
+     },
+     {
+       "type": "textarea",
+       "id": "additional_text",
+       "label": "Additional Text",
+       "default": "<p>This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.</p>"
+     }
+  ]
+}
+{% endschema %}

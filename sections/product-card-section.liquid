@@ -1,0 +1,39 @@
+{% comment %} <link rel="stylesheet" href="{{ 'product-card-section.css' | asset_url }}" media="print" onload="this.media='all'"> {% endcomment %}
+
+<div class="page-width">
+  <div class="grid--2-col .grid__item grid--4-col-desktop .grid__item">
+    {% for product in section.settings.product_list limit: product_limit %}
+      <div class="grid__item">
+        {% render 'product-card', product: product %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Product Card",
+  "tag" : "section",
+  "class" : "homepage section",
+  "settings": [
+    {
+  "type": "range",
+  "id": "product_limit",
+  "min": 1,
+  "max": 6,
+  "step": 1,
+  "label": "Product Limit",
+  "default": 4
+},{
+  "type": "product_list",
+  "id": "product_list",
+  "label": "Product List"
+    }
+  ],
+  "presets": [
+    {
+      "name" : "Custom Product Card"
+    }
+  ]
+}
+{% endschema %}

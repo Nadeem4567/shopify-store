@@ -1,0 +1,55 @@
+.contact-form-container {
+    gap: 20rem;
+    padding: 5rem 15rem;
+  }
+
+  .name, .email{
+    margin-bottom: 2rem;
+  }
+
+  .name_field, .email__field {
+    border-width: 0 0 1px 0;
+    outline: none;
+    padding-right: 37rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .message__field {
+    padding-right: 37rem;
+    padding-bottom: 20rem;
+  }
+
+  .additional_text {
+    font-size: 1.2rem;
+  }
+
+  .submit {
+    align-self: flex-end;
+  }
+
+  .submit__button {
+    background: #37302c;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border: none;
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 549px) {
+    .contact-form-container {
+      flex-direction: column;
+      max-width: 100vw;
+      padding: 0 1.5rem;
+      gap: 7rem;
+      margin-bottom: 4rem;
+    }
+
+    .name_field, .email__field {
+      padding-right: 3rem;
+    }
+
+    .message__field {
+    padding-right: 3rem;
+  }
+  }

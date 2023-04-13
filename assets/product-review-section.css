@@ -1,0 +1,29 @@
+.product-review-container {
+  padding: 0.25rem 0 2.5rem 0;
+}
+
+.review-blocks {
+  max-width: 1440px;
+}
+
+.review-block-content {
+  padding: 0 2rem;
+}
+
+.rule {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .review-blocks {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 3rem;
+  }
+
+  .rule{
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+  }
+}

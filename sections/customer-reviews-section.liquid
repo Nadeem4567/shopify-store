@@ -1,0 +1,175 @@
+<link rel="stylesheet" href="{{ 'customer-review-section.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<div class="main__container">
+  {% if section.blocks.size > 0 %}
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'review_heading_block' %}
+          <div class="flex review-heading-container page-width column">
+            <div>
+              {% assign total_review_stars = block.settings.total_review_stars %}
+              {% for i in (1..total_review_stars) %}
+                <span>&#9733;</span>
+              {% endfor %}
+            </div>
+            <div>
+              Based on {{ block.settings.review_count }}
+              {{ block.settings.review_count | pluralize: 'review', 'reviews' }}
+            </div>
+            <a href="#" class="customer-action-text">
+              {{ block.settings.customer_action_text }}
+            </a>
+            <hr>
+          </div>
+
+        {% when 'review_block' %}
+          <div class="flex customer-review-container page-width column">
+            <div>
+              {% assign customer_review_stars = block.settings.customer_review_stars %}
+              {% for i in (1..customer_review_stars) %}
+                <span>&#9733;</span>
+              {% endfor %}
+            </div>
+            <div>{{ block.settings.review_title }}</div>
+            <div>
+              <span class="fw-b fs-i">{{ block.settings.customer_name }}</span> on
+              <span class="fw-b fs-i">
+                {{- block.settings.review_month }}
+                {{ block.settings.review_date }}, {{ block.settings.review_year -}}
+              </span>
+            </div>
+            <div>{{ block.settings.review_paragraph }}</div>
+            <a href="#" class="report-text">{{ block.settings.report_text }}</a>
+            <hr>
+          </div>
+      {% endcase %}
+    {% endfor %}
+    <div class="page-number"><span class="fw-b current">1 </span><span>2</span></div>
+  {% endif %}
+</div>
+
+{% style %}
+  .review-heading-container {
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .review-heading-container * {
+    color: {{ section.settings.text_color }}
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Customer Reviews",
+  "tag" : "section",
+  "class" : "section",
+  "settings" : [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default" : "transparent"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000"
+    }
+  ],
+  "blocks": [
+    {
+      "type" : "review_heading_block",
+      "name" : "Heading Block",
+      "settings" : [
+        {
+        "type": "range",
+           "id": "total_review_stars",
+           "min": 1,
+           "max": 5,
+           "step": 1,
+           "label": "Review Stars",
+           "default": 5
+        },
+        {
+        "type": "range",
+           "id": "review_count",
+           "min": 1,
+           "max": 5,
+           "step": 1,
+           "label": "Number of Reviews",
+           "default": 5
+        },
+        {
+           "type": "text",
+           "id": "customer_action_text",
+           "label": "Customer Action Text",
+           "default": "Write a review"
+         }
+      ]
+    },
+    {
+      "type" : "review_block",
+      "name" : "Review Block",
+      "settings" : [
+        {
+        "type": "range",
+          "id": "customer_review_stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Review Stars",
+          "default": 5
+        },
+        {
+           "type": "text",
+           "id": "review_title",
+           "label": "Review Title",
+           "default": "Got it next day"
+        },
+        {
+           "type": "text",
+           "id": "customer_name",
+           "label": "Customer Name",
+           "default": "Layla Miller"
+        },
+        {
+           "type": "text",
+           "id": "review_date",
+           "label": "Review Date",
+           "default": "22"
+        },
+        {
+           "type": "text",
+           "id": "review_month",
+           "label": "Review Month",
+           "default": "Feb"
+        },
+        {
+           "type": "text",
+           "id": "review_year",
+           "label": "Review Year",
+           "default": "2022"
+        },
+        {
+          "type": "textarea",
+          "id": "review_paragraph",
+          "label": "Review Description",
+          "default": "<p>I just chose standard delivery and it still arrived next day, even when I placed the order at 10pm!!</p>"
+         },
+        {
+           "type": "text",
+           "id": "report_text",
+           "label": "Report Text",
+           "default": "Report as inappropriate"
+        }
+      ]
+    }
+  ],
+  "presets" : [
+    {
+      "name" : "Customer Reviews"
+    }
+  ]
+}
+{% endschema %}

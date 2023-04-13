@@ -1,0 +1,124 @@
+{% assign current_variant = product.selected_or_first_available_variant %}
+{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+
+<product-card>
+  <div class="product-card-content">
+    <a href="{{ product.url }}" class="product-card__link">
+      <img
+        class="product__card-image"
+        src="{{ featured_image | image_url: width: 1000 }}"
+        loading="lazy"
+        width="{{ featured_image.width }}"
+        height="{{ featured_image.width | divided_by: featured_image.aspect_ratio | round }}"
+        alt="{{ alt | default: featured_image.alt | escape }}"
+      >
+    </a>
+
+    <div class="product-card__info">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+
+      <div class="product-card__prices">
+        {% if current_variant.compare_at_price > product.price %}
+          <s>{{ current_variant.compare_at_price | money }}</s>
+          <span>{{ current_variant.price | money }}</span>
+        {% else %}
+          <span>{{ current_variant.price | money }}</span>
+        {% endif %}
+      </div>
+
+      {% form 'product', product %}
+        <input type="hidden" name="quantity" value="1">
+
+        {% if product.has_only_default_variant %}
+          <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+        {% else %}
+          {% for option in product.options_with_values %}
+            <div class="option option--{{ option.name | handleize }}">
+              <label>{{ option.name | capitalize }}</label>
+
+              <ul>
+                {% for value in option.values %}
+                  <li>
+                    <input type="radio" name="{{ option.name }}" value="{{ value }}">
+
+                    {% assign option_name = option.name | downcase | handleize %}
+                    {% if option_name == 'color' %}
+                      <span
+                        class="color-swatch"
+                        style="background-color: {{ value | handleize }}; background-image: url({{ value | handleize | append: '.jpg' | file_img_url }}); opacity: 0.8"
+                      >
+                        {{ value }}
+                      </span>
+                    {% else %}
+                      <label>{{ value }}</label>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+
+          <select name="id" class="select-box">
+            {% for variant in product.variants %}
+              <option
+                value="{{ variant.id }}"
+                {% if current_variant.id == variant.id %}
+                  selected
+                {% endif %}
+              >
+                {{ variant.title }}
+              </option>
+            {% endfor %}
+          </select>
+        {% endif %}
+
+        {% if current_variant.available %}
+          <button type="submit" class="button">Add to cart</button>
+        {% else %}
+          <button type="button" class="button">
+            Soldout
+          </button>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+</product-card>
+
+{% style %}
+  .product-card-container {
+    display: flex;
+    margin: 0.5rem 2rem 2rem;
+  }
+
+  .product-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    place-items: center;
+  }
+
+  a{
+    text-decoration: none;
+    color: #fff;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .product-card__prices {
+    margin-bottom: 1rem;
+  }
+
+  .select-box {
+    display: block;
+    margin-bottom: 1rem;
+    background-color: #eee;
+    border-radius: 0.8rem;
+  }
+
+  .color-swatch {
+    padding: 0.35rem;
+    border-radius: 0.45rem;
+  }
+{% endstyle %}

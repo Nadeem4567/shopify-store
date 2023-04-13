@@ -1,0 +1,137 @@
+<link rel="stylesheet" href="{{ 'video-section.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<div class="video__main-container">
+  <div class="video-container">
+    {% for video in section.settings.video.sources %}
+      {% if video.format == 'mp4' %}
+        <div class="media media--square">
+          <video autoplay muted loop playsinline width="100vw" height="30rem">
+            <source src="{{ video.url }}" type="{{ video.mime_type }}">
+          </video>
+        </div>
+      {% endif %}
+    {% endfor %}
+    <div class="video-content-container flex {{ section.settings.content_position }}">
+      <div class="video-content {{ section.settings.content_alignment }}">
+        <h1 class="video_heading-{{ section.id }}">{{ section.settings.heading_text }}</h1>
+        <div class="video_pargraph-{{ section.id }}">{{ section.settings.paragraph_text }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .video__main-container {
+    margin: -31rem 0;
+   }
+
+  .video_heading-{{ section.id }} {
+    color: {{ section.settings.heading_text_color }};
+  }
+
+  .video_pargraph-{{ section.id }} {
+    color: {{ section.settings.paragraph_text_color }};
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Custom Video Section",
+  "tag": "section",
+  "class": "homepage section",
+  "settings": [
+     {
+       "type": "video",
+        "id": "video",
+       "label": "Block Video"
+    }
+    ,
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading Text",
+      "default": "JOIN THE GANG"
+    },
+    {
+      "type": "color",
+      "id": "heading_text_color",
+      "label": "Heading Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph_text",
+      "label": "Paragraph Text",
+      "default": "<p>Follow us on Instagram</p>"
+    },
+    {
+      "type": "color",
+      "id": "paragraph_text_color",
+      "label": "Paragraph Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "content alignment",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        }, {
+          "value": "text-center",
+          "label": "Center"
+        }, {
+          "value": "text-right",
+          "label": "Right"
+        }
+      ],
+      "default": "text-center"
+    },
+    {
+            "type": "select",
+            "id": "content_position",
+            "label": "Content position",
+            "options": [
+              {
+                "value": "align-start justify-start",
+                "label": "Top left"
+              },
+              {
+                "value": "align-start justify-center",
+                "label": "Top center"
+              },
+              {
+                "value": "align-start justify-end",
+                "label": "Top right"
+              },
+              {
+                "value": "align-center justify-start",
+                "label": "Middle left"
+              }, {
+                "value": "align-center justify-center",
+                "label": "Middle center"
+              }, {
+                "value": "align-center justify-end",
+                "label": "Middle right"
+              }, {
+                "value": "align-end justify-start",
+                "label": "Bottom left"
+              }, {
+                "value": "align-end justify-center",
+                "label": "Bottom center"
+              }, {
+                "value": "align-end justify-end",
+                "label": "Bottom right"
+              }
+            ],
+            "default": "align-center justify-center"
+          }
+  ],
+  "presets": [
+    {
+      "name": "Custom Video Section"
+    }
+  ]
+}
+{% endschema %}

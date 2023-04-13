@@ -1,0 +1,81 @@
+{% schema %}
+{
+  "name" : "footer",
+  "tag" : "section",
+  "class" : "footer",
+  "blocks" : [
+    {
+      "type" : "contact-block",
+      "name" : "Contact Block",
+      "settings" : [
+        {
+          "type": "text",
+          "id": "contact_heading",
+          "label": "Heading",
+          "default": "Contact us"
+        },
+        {
+          "type": "textarea",
+          "id": "contact_paragraph",
+          "label": "Contact Paragraph",
+          "default": "<p>Shorditch High Street<br />London, UK<br />L1 3HG</p>"
+        },
+        {
+          "type": "text",
+          "id": "contact_email",
+          "label": "Email",
+          "default": "enquiry@wizaah.com"
+        }
+      ]
+    },
+    {
+      "type" : "footer-menu",
+      "name" : "Footer Menu",
+      "settings" : [
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type" : "newsletter-block",
+      "name" : "Newsletter Block",
+      "settings" : [
+         {
+          "type": "text",
+          "id": "newsletter_heading",
+          "label": "Heading",
+          "default": "Newsletter"
+        },
+         {
+          "type": "text",
+          "id": "placeholder_text",
+          "label": "Input Placeholder",
+          "default": "email@example.com"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Subscribe"
+        },
+        {
+          "type": "color",
+          "id": "button_background_color",
+          "label": "Button Background Color",
+          "default": "#37302c"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#fff"
+        }
+
+      ]
+    }
+  ]
+}
+{% endschema %}

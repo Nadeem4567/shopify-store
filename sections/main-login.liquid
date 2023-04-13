@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="{{ 'login.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<div class="flex align-center justify-center">
+  <div class="login-form">
+    <h2 class="">LOGIN</h2>
+    {% form 'customer_login' %}
+      {{ form.errors | default_errors }}
+
+      <div class="email">
+        <input class="email" type="email" name="customer[email]" Placeholder="Email">
+      </div>
+
+      <div class="password">
+        <input class="password" type="password" name="customer[password]" Placeholder="Password">
+      </div>
+
+      <div class="submit login_submit">
+        <input class="login_submit_button" type="submit" value="Sign in">
+      </div>
+
+      <div class="create-account-button text-center point">
+        <a href="{{ routes.account_register_url }}">Create Account</a>
+      </div>
+
+      <div class="text-center point"><a href="#">Forgot your password?</a></div>
+    {% endform %}
+  </div>
+</div>
+
+<script>
+  let register_button = document.querySelector('.create-account-button');
+  let register_form = document.querySelector('.customer-register-form');
+
+  register_button.addEventListener('click', {
+    register_form.classList.toggle('hidden');
+  })
+</script>
+
+{% style %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Section name",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,13 @@
+{
+  "layout": false,
+  "sections": {
+    "main": {
+      "type": "mini-cart",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,97 @@
+<form action="{{ routes.cart_url }}" method="post">
+  <div class="my-cart" data-ajax-cart-section>
+    <h2>Cart</h2>
+
+    {% for item in cart.items %}
+      <div class="flex cart-items-container">
+        <div>
+          <a href="{{ item.url }}">
+            {% render 'image', class: 'logo-img', mobileSrc: item.image, desktopSrc: item.image -%}
+            <!-- <img src="{{ item.image | img_url: '1500' }}"> -->
+          </a>
+        </div>
+        <div class="my-cart__item">
+          <div>
+            <a href="{{ item.url }}">{{ item.title }}</a>
+          </div>
+          <div>Price: {{ item.final_price | money }}</div>
+
+          <div>
+            Quantity:
+            <a
+              data-ajax-cart-request-button
+              href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
+            >
+              <i class="minus-icon"></i>
+            </a>
+            <input
+              data-ajax-cart-quantity-input="{{ forloop.index }}"
+              value="{{ item.quantity }}"
+              name="updates[]"
+              type="number"
+            >
+            <a
+              data-ajax-cart-request-button
+              href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
+            >
+              <i class="plus-icon"></i>
+            </a>
+          </div>
+          <div data-ajax-cart-messages="{{ item.key }}"></div>
+
+          <div>
+            <!-- Total: <strong>{{ item.final_line_price | money }}</strong> -->
+            Total: <strong> {{ cart.total_price | money_with_currency }}</strong>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <button type="submit" name="checkout">Checkout — {{ cart.total_price | money_with_currency }}</button>
+  </div>
+</form>
+
+{% style %}
+      .my-cart {
+        width: 100vw;
+  /*       margin: 0 auto; */
+        padding: 5rem 0;
+      }
+
+      .my-cart__item {
+    /*     margin-left: 10rem; */
+      }
+
+      .cart-items-container {
+        max-width: 100vw;
+      }
+
+      .logo-img {
+        max-height: 10rem;
+        max-width: 10rem;
+      }
+{% endstyle %}
+
+{% schema %} { "name": "My Cart" } {% endschema %}
+
+{% comment %}
+  Using fetch Method::
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Access-Token': 'your_access_token'
+    },
+    body: JSON.stringify({
+      quantity: 1,
+      id: 1234
+    })
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+{% endcomment %}

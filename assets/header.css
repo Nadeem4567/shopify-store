@@ -1,0 +1,116 @@
+header {
+  padding: 1.5rem 3rem;
+  width: 100vw;
+  max-width: 1440px;
+  position: sticky:
+  top: 0;
+}
+
+/* .sticky {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  background: #fff;
+  z-index: 10;
+} */
+
+header:hover {
+  background-color: transaprent;
+}
+
+header * {
+  color: #000;
+}
+
+.parent * {
+  color: #000;
+}
+
+.logo {
+  position:relative;
+  right: 10.75rem;
+  max-width: 13.5rem;
+  max-height: 13.5rem;
+  object-fit: contain;
+}
+
+.header-icons {
+  margin-left: 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.hicon {
+  height: 4.3rem;
+  width: 1.75rem;
+}
+
+.cart-icon {
+  height: 5rem;
+  width: 2rem;
+}
+
+.child {
+  display: none;
+}
+
+.child > * {
+  margin: 0 2rem;
+  margin-left: 2rem;
+}
+
+.child_mobile {
+  display: none;
+}
+
+.parent-title:hover + .child {
+  display: flex;
+}
+
+.fa-icon-block {
+  display: none;
+}
+
+/* .mobile-menu-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: none;
+} */
+
+/* .mobile-menu-container * {
+  color: #000;
+} */
+
+@media screen and (max-width: 749px) {
+   header {
+     padding: 1.5rem 2rem;
+  }
+  
+  .header-menu {
+    display: none;
+  }
+
+  .logo {
+    right: 0;
+    left: 1.2rem;
+    top: 0.6rem;
+    max-width: 10rem;
+    max-height: 5rem;
+  }
+
+  .fa-bars {
+    font-size: 1.75rem;
+    border: 1px solid #555;
+    padding: 0.5rem;
+    border-radius: 0.35rem;
+  }
+
+  .fa-icon-block {
+    display: flex;
+    align-self: start;
+  }
+}

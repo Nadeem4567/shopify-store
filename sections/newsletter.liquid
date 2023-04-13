@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="{{ 'newsletter.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<div class="newsletter-main-container">
+  <div class="newsletter-container flex align-center">
+    <h2 class="heading-{{ section.id }}">{{ section.settings.heading_text | upcase }}</h2>
+    <div class="flex">
+      <form
+        method="post"
+        action="/contact#newsletter_section_form"
+        accept-charset="UTF-8"
+        class="contact-form"
+        onsubmit="window.Shopify.recaptchaV3.addToken(this, &quot;customer&quot;); return false;"
+      >
+        <input
+          type="text"
+          name="contact[email]"
+          placeholder="{{ section.settings.placeholder_text }}"
+        >
+        <span id="newsletter_submit" name="subscribe" class="arrow-icon">
+          <button class="arrow-button">{% render 'icon-arrow' %}</button>
+        </span>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .newsletter-main-container {
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .heading-{{ section.id }} {
+    color: {{ section.settings.heading_text_color }}
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name" : "Newsletter Section",
+  "tag" : "section",
+  "class": "homepage section",
+  "settings": [
+    {
+    "type": "color",
+    "id": "background_color",
+    "label": "Background Color",
+    "default": "#37302c"
+   },
+    {
+   "type": "text",
+    "id": "heading_text",
+    "label": "Heading Text",
+    "default": "JOIN OUR MAILING LIST"
+    },
+    {
+    "type": "color",
+    "id": "heading_text_color",
+    "label": "Heading Color",
+    "default": "#fff"
+   },
+    {
+   "type": "text",
+    "id": "placeholder_text",
+    "label": "Placeholder Text",
+    "default": "Enter Email"
+    },
+    {
+    "type": "color",
+    "id": "input_text_color",
+    "label": "Input Text Color",
+    "default": "#000"
+   }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter Section"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,132 @@
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+>
+
+<div class="flex column mobile-menu-container mobile-show">
+  <div class="icon-cross">
+    {% render 'icon-arrow-cross' %}
+  </div>
+  <ul>
+    {% for link in section.settings.linklist_mobile.links %}
+      <li class="parent-title flex text-center justify-between">
+        <a href="{{ link.url }}" class="">
+          {{- link.title -}}
+        </a>
+        {%- if link.links.size > 0 -%}
+          <span class="mobile-header-menu-down-arrow"><i class="fa-solid fa-angle-right"></i></span>
+        {%- endif -%}
+
+        {% if link.links.size > 0 %}
+          <ul class="child-list">
+            {% for sub_link in link.links %}
+              <li>
+                <a href="{{ sub_link.url }}">{{ sub_link.title }}</a>
+
+                {% if sub_link.links.size > 0 %}
+                  <ul>
+                    {% for child_link in sub_link.links %}
+                      <li>
+                        <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+
+                        {% assign fourth_level_handle = child_link.title | handleize | strip %}
+                        <ul {{ fourth_level_handle }}>
+                          {% for fourth_level in linklists[fourth_level_handle].links %}
+                            <li>
+                              <a href="{{ fourth_level.url }}">{{ fourth_level.title }}</a>
+
+                              <ul>
+                                {% for fifth_level in fourth_level.links %}
+                                  <li>
+                                    <a href="{{ fifth_level.url }}">{{ fifth_level.title }}</a>
+                                  </li>
+                                {% endfor %}
+                              </ul>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% style %}
+  /*       .mobile-menu-container {
+          display: none;
+        } */
+
+        @media screen and (max-width: 549px) {
+          .mobile-menu-container {
+    /*       display: flex; */
+          padding: 1.5rem 1rem;
+          }
+
+          .child-list {
+            display: none;
+          }
+
+          .icon-cross {
+            align-self: flex-end;
+          }
+
+          .parent-title {
+            border-bottom: 1px solid #000;
+            width: 100%;
+            padding: 1.75rem 0;
+            vertical-align: middle;
+          }
+
+          .parent-title:last-of-type {
+            border-bottom: none;
+          }
+
+          .header-menu-down-arrow {
+      /*       margin-left: 1rem; */
+          }
+        }
+{% endstyle %}
+
+{% javascript %}
+  let cross = document.querySelector('.icon-cross');
+  let menu = document.querySelector('.mobile-menu-container');
+
+  cross.addEventListener("click", ()=>{
+        // menu.classList.remove('flex');
+        menu.classList.add('mobile-show');
+  });
+
+
+
+
+  //   let arrow = document.querySelector(".fa-bars");
+  // let menu = document.querySelector(".mobile-menu-container");
+
+  // arrow.addEventListener("click", ()=>{
+  //   menu.classList.remove('none');
+  //   menu.classList.add('flex');
+  // });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Mobile Menu",
+  "settings": [
+    {
+  "type": "link_list",
+  "id": "linklist_mobile",
+  "label": "Mobile Menu"
+     }
+  ]
+}
+{% endschema %}

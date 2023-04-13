@@ -1,0 +1,481 @@
+<link rel="stylesheet" href="{{ 'marmeto-product.css' | asset_url }}" media="print" onload="this.media='all'">
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+<script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
+
+<div class="product product-flex">
+  <div class="product-flexitem product-flexitem-images">
+    <div class="product__media-list">
+      {%- for media in product.media -%}
+        <div class="product__media-item product__media-item-{{ forloop.index }}">
+          {% render 'product-media', media: media %}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="product-flexitem product-flexitem-info">
+    <div id="product-info-{{ section.id }}" class="product-info">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            {% render block %}
+          {%- when 'text' -%}
+            <div class="product__text" {{ block.shopify_attributes }}>
+              {{- block.settings.text -}}
+            </div>
+          {%- when 'title' -%}
+            <h1 class="product__title" {{ block.shopify_attributes }}>
+              {{ product.title | escape }}
+            </h1>
+          {%- when 'price' -%}
+            <div id="price-{{ section.id }}" class="product__prices text-left" {{ block.shopify_attributes }}>
+              <span class="price__compare">{{ current_variant.compare_at_price | money }}</span>
+
+              {%- if current_variant.compare_at_price > current_variant.price -%}
+                <span class="price__discount">
+                  {{-
+                    current_variant.compare_at_price
+                    | minus: current_variant.price
+                    | times: 100
+                    | divided_by: current_variant.compare_at_price
+                    | minus: 100
+                  -}}
+                  % Off
+                </span>
+              {%- endif -%}
+
+              <p class="price__regular {% if current_variant.compare_at_price > current_variant.price %}on-sale{% endif %}">
+                {{- current_variant.price | money_with_currency -}}
+              </p>
+            </div>
+          {%- when 'quantity_selector' -%}
+            <div class="product__quantity" {{ block.shopify_attributes }}>
+              <label class="quantity__label" for="Quantity-{{ section.id }}"> Quantity </label>
+
+              <marmeto-quantity-input class="quantity__flex">
+                <button id="minus" onclick="decrease_qty()" class="quantity__button" name="minus" type="button">
+                  -
+                </button>
+                <input
+                  class="quantity__input"
+                  type="number"
+                  name="quantity"
+                  id="Quantity-{{ section.id }}"
+                  min="1"
+                  value="1"
+                  form="{{ product_form_id }}"
+                >
+                <button id="plus" onclick="increase_qty()" class="quantity__button" name="plus" type="button">+</button>
+              </marmeto-quantity-input>
+            </div>
+          {%- when 'variant_picker' -%}
+            {%- unless product.has_only_default_variant -%}
+              <marmeto-variant-radios
+                class="product__variants"
+                data-section="{{ section.id }}"
+                data-url="{{ product.url }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- for option in product.options_with_values -%}
+                  <div class="product__variant">
+                    <label class="product__variant--label">{{ option.name }}</label><br>
+                    {%- for value in option.values -%}
+                      <input
+                        type="radio"
+                        id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                        name="{{ option.name }}"
+                        value="{{ value | escape }}"
+                        form="{{ product_form_id }}"
+                        {% if option.selected_value == value %}
+                          checked
+                        {% endif %}
+                      >
+
+                      {% if option.name == color %}
+                        <label
+                          style="background-color: {{ value | split: ' '| first | downcase | handleize }}; background-image: url({{ value | split: ' '| first | downcase | handleize | append: '.jpg' | file_img_url }})"
+                          ;
+                          for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                        >
+                          {{ value }}
+                        </label>
+
+                      {% else %}
+
+                      {% endif %}
+
+                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+                        {{ value }}
+                      </label>
+                    {%- endfor -%}
+                  </div>
+                {%- endfor -%}
+
+                <script type="application/json">
+                  {{ product.variants | json }}
+                </script>
+              </marmeto-variant-radios>
+            {%- endunless -%}
+          {%- when 'buy_buttons' -%}
+            <div {{ block.shopify_attributes }}>
+              <marmeto-product-form class="product__form">
+                <div class="product__form-error" role="alert" hidden>
+                  <span class="product__form-error-message"></span>
+                </div>
+
+                {%- form 'product',
+                  product,
+                  id: product_form_id,
+                  class: 'form',
+                  novalidate: 'novalidate',
+                  data-type: 'add-to-cart-form'
+                -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" disabled>
+
+                  <div class="product__form-buttons">
+                    <button
+                      type="submit"
+                      name="add"
+                      class="product__form-button"
+                      {% if product.selected_or_first_available_variant.available == false %}
+                        disabled
+                      {% endif %}
+                    >
+                      
+                     <span>
+                        {%- if product.selected_or_first_available_variant.available -%}
+                          ADD TO CART
+                        {%- else -%}
+                          SOLD OUT
+                        {%- endif -%}
+                      </span>
+                    </button>
+                    <div class="buy_now_button">
+                      {%- if block.settings.show_dynamic_checkout -%}
+                        {{ form | payment_button }}
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endform -%}
+              </marmeto-product-form>
+            </div>
+          {%- when 'description' -%}
+            {%- if product.description != blank -%}
+              <div class="product__description">
+                {{ product.description }}
+              </div>
+            {%- endif -%}
+          {%- when 'collapsible_tab' -%}
+            <div class="product__tab" {{ block.shopify_attributes }}>
+              <details id="Tabs-{{ block.id }}-{{ section.id }}">
+                <summary>
+                  <div class="product__tab-summary">
+                    <div class="product__tab-title">
+                      {{ block.settings.heading | default: block.settings.page.title }}
+                    </div>
+                    <div class="product__tab-icon">
+                      <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        role="presentation"
+                        class="icon icon-caret"
+                        viewBox="0 0 10 6"
+                      >
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </summary>
+                <div class="product__tab-content" id="ProductTab-{{ block.id }}-{{ section.id }}">
+                  {{ block.settings.content }}
+                  {{ block.settings.page.content }}
+                </div>
+              </details>
+            </div>
+
+          {% when 'gift_wrap_block' %}
+            <div class="gift-wrap-section flex">
+              <span>
+                <input
+                  type="checkbox"
+                  {% if block.settings.gift_wrap_checkbox == checked %}
+                    checked
+                  {% endif %}
+                >
+                <span style="color: #000">{{ block.settings.gift_wrap_text }}</span>
+              </span>
+            </div>
+
+          {% when 'metafield_block' %}
+            {% assign logo_limit = block.settings.logo_limit %}
+            <div class="flex metafield-blocks">
+              {% for i in (1..logo_limit) %}
+                {% assign icon_id = 'icon_' | append: i %}
+                <div>
+                  {{ product.metafields.custom[icon_id] | img_tag }}
+                </div>
+              {% endfor %}
+            </div>
+
+          {% when 'share' %}
+            <span>
+              <span>
+                {% render 'icon-share' %}
+              </span>
+              <span class="share-text">{{ block.settings.share_text }}</span>
+            </span>
+
+          {% when 'social_logos' %}
+            <div class="flex social_share-icons-container">
+              <div class="social_share-icons">
+                <a href="#">{% render 'icon-facebook' %}</a>
+              </div>
+              <div class="social_share-icons">
+                <a href="#">{% render 'icon-twitter' %}</a>
+              </div>
+              <div class="social_share-icons">
+                <a href="#">{% render 'icon-pinterest' %}</a>
+              </div>
+            </div>
+
+          {%- when 'badge' -%}
+            <div class="product__badges" {{ block.shopify_attributes }}>
+              {%- for tag in product.tags -%}
+                {%- if tag contains 'badge__' -%}
+                  {%- assign badgeText = tag | split: '__' | last -%}
+                  <div class="product__badge">{{ badgeText }}</div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+
+          {% when 'review_block' %}
+            <div>
+              <p>
+                {% assign stars = block.settings.review_stars %}
+                {% for i in (1..stars) %}
+                  <span>&#9733;</span>
+                {% endfor %}
+                <span>({{ block.settings.no_of_reviews }})</span>
+              </p>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .product__media-item-1 {
+    width: 100%;
+  }
+
+  .product__media-item-2 {
+    width: 23.87%;
+  }
+
+  .product__media-item-3 {
+    width: 23.87%;
+  }
+
+  .product__media-item-4, .product__media-item-5, .product__media-item-6, .product__media-item-7, .product__media-item-8, .product__media-item-9, .product__media-item-10 {
+    width: 23.87%;
+  }
+{% endstyle %}
+
+{% javascript %}
+  // function increase_qty() {
+  //   let qty_value = document.querySelector('.quantity__input');
+  //   qty_value.value = qty_value.value + 1;
+  // }
+
+  // function decrease_qty() {
+  //   let qty_value = document.querySelector('.quantity__input');
+  //   qty_value.value = qty_value.value - 1;
+  // }
+{% endjavascript %}
+
+{% schema %}
+ {
+   "name": "Product Information",
+    "tag": "section",
+   "blocks": [
+  {
+       "type": "@app"
+     },
+  {
+       "type": "text",
+       "name": "Text",
+       "settings": [
+         {
+           "type": "text",
+           "id": "text",
+           "default": "Text block",
+           "label": "Text"
+         }
+       ]
+     },
+  {
+       "type": "title",
+       "name": "Title",
+       "limit": 1
+     },
+  {
+       "type": "price",
+       "name": "Price",
+       "limit": 1
+     },
+  {
+       "type": "quantity_selector",
+       "name": "Quantity selector",
+       "limit": 1
+     },
+  {
+       "type": "variant_picker",
+       "name": "Variant picker",
+       "limit": 1
+     },
+  {
+       "type": "buy_buttons",
+       "name": "Buy buttons",
+       "limit": 1,
+       "settings": [
+         {
+           "type": "checkbox",
+           "id": "show_dynamic_checkout",
+           "default": true,
+           "label": "Show dynamic checkout buttons",
+           "info": "Using the payment methods available on your store, customers see their preferred option, like PayPal or Apple Pay. [Learn more](https:\/\/help.shopify.com\/manual\/using-themes\/change-the-layout\/dynamic-checkout)"
+         }
+       ]
+     },
+  {
+       "type": "description",
+       "name": "Description",
+       "limit": 1
+     },
+  {
+       "type": "collapsible_tab",
+       "name": "Collapsible tab",
+       "settings": [
+         {
+           "type": "text",
+           "id": "heading",
+           "default": "Collapsible tab",
+           "info": "Include a heading that explains the content.",
+           "label": "Heading"
+         },
+         {
+           "type": "richtext",
+           "id": "content",
+           "label": "Tab content"
+         },
+         {
+           "type": "page",
+           "id": "page",
+           "label": "Tab content from page"
+         }
+       ]
+     },
+     {
+           "type" : "gift_wrap_block",
+           "name" : "Gift Wrap Block",
+           "settings": [
+             {
+           "type": "text",
+           "id": "gift_wrap_text",
+           "label": "Text",
+           "default": "Gift wrap this product"
+         },
+             {
+          "type": "select",
+          "id": "gift_wrap_checkbox",
+          "label": "Select Gift Wrap Checkbox",
+           "options": [
+       {
+          "value": "checked",
+          "label": "Checked"
+       },
+      {
+      "value": "unchecked",
+      "label": "Uncheck"
+       }
+  ],
+  "default": "unchecked"
+    }
+           ]
+         },
+     {
+           "type" : "metafield_block",
+           "name" : "Logo Blocks",
+           "settings": [
+              {
+                 "type": "range",
+                 "id": "logo_limit",
+                 "min": 1,
+                 "max": 6,
+                 "step": 1,
+                 "unit": "px",
+                 "label": "Number of logos",
+                 "default": 4
+              }
+
+           ]
+     },
+     {
+           "type" : "share",
+           "name" : "Share Block",
+           "settings": [
+             {
+           "type": "text",
+           "id": "share_text",
+           "label": "Text",
+           "default": "Share"
+         }
+           ]
+     },
+      {
+           "type" : "social_logos",
+           "name" : "Social Logo Blocks",
+           "settings": []
+      },
+          {
+        "type": "badge",
+        "name": "Badge",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Add badge__{ text } tag on the product to show the badge text"
+          }
+        ]
+      },
+     {
+       "type" : "review_block",
+       "name" : "Product Review Block",
+       "settings" : [
+         {
+           "type": "range",
+           "id": "review_stars",
+           "min": 1,
+           "max": 5,
+           "step": 1,
+           "label": "Review Stars",
+           "default": 1
+        },
+        {
+           "type": "range",
+           "id": "no_of_reviews",
+           "min": 1,
+           "max": 100,
+           "step": 1,
+           "label": "No of reviews",
+           "default": 6
+        }
+       ]
+     }
+
+]
+ }
+{% endschema %}

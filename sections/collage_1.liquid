@@ -1,0 +1,206 @@
+<link rel="stylesheet" href="{{ 'collage_1.css' | asset_url }}" media="print" onload="this.media='all'">
+
+{% if section.blocks.size > 0 %}
+  <div class="collage-container page-width">
+    {% for block in section.blocks %}
+      <div class="collage-content collage-content-{{ forloop.index }} collage-content-{{ block.id }}">
+        <div class="collage_content_image-{{ block.id }}">
+          {% assign mobile_image = block.settings.image_mobile | default: blocks.settings.image %}
+          {% render 'image', class: '', mobileSrc: mobile_image, desktopSrc: block.settings.image %}
+        </div>
+        <div class="collage_content-text-container-{{ block.id }} collage_content-text-container-{{ forloop.index }} text-center">
+          <div class="collage-content-text-{{ block.id }}">
+            {% if block.settings.heading_text != blank %}
+              <h2 class="collage_content_heading-{{ block.id }}">{{ block.settings.heading_text | upcase }}</h2>
+            {% endif %}
+
+            {% if block.settings.paragraph_text != blank %}
+              <h4 class="collage_content_paragraph-{{ block.id }}">{{ block.settings.paragraph_text }}</h4>
+            {% endif %}
+
+            {% if block.settings.button_text != blank or block.settings.button_url != blank %}
+              <a href="{{ block.settings.button_link }}" class="button button--primary button-{{ block.id }}">
+                {{- block.settings.button_text | upcase -}}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% style %}
+  {% for block in section.blocks %}
+  .collage-content-{{ block.id }} {
+    position: relative;
+  }
+
+  .collage_content-text-container-{{ block.id }} {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    padding: 1rem;
+  }
+
+  .collage-content-text-{{ block.id }} {
+    max-width: 500px;
+  }
+
+  .collage_content_heading-{{ block.id }} {
+    color: {{ block.settings.heading_text_color }}
+  }
+
+  .collage_content_paragraph-{{ block.id }} {
+    color: {{ block.settings.paragraph_text_color }};
+    font-size: {{ section.settings.paragraph_font_size }}px;
+  }
+
+  .collage-content-3 {
+    width: 100%;
+    max-height: 100%;
+  }
+
+  .collage-content-3 > img {
+    object-fit: contain;
+  }
+
+  .collage_content_image-{{ block.id }} {
+    padding: 0 1.5rem;
+    padding-left: 0;
+  }
+
+  .button-{{ block.id }} {
+    background-color: {{ block.settings.button_background_color }};
+    color: {{ block.settings.button_text_color }};
+    padding: 1rem 3.5rem;
+  }
+
+  .button-{{ block.id }}:hover {
+    background-color:  #a9a9a9;
+  }
+
+  @media screen and (max-width: 749px) {
+    .collage_content-text-container-{{ block.id }} {
+    top: 25%;
+    left: 15%;
+    }
+
+    .button-{{ block.id }} {
+      font-size: 1.25rem;
+    }
+  }
+  {% endfor %}}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Custom Collage",
+  "tag" : "section",
+  "class": "custom-collage",
+  "settings" : [
+    {
+  "type": "range",
+  "id": "paragraph_font_size",
+  "min": 16,
+  "max": 24,
+  "step": 1,
+  "unit": "px",
+  "label": "Pargraph Font size",
+  "default": 20
+}
+
+  ],
+  "blocks": [
+    {
+    "name" : "Collage Block",
+    "type" : "collage-block",
+    "limit": 3,
+    "settings" : [
+          {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1200 x 500px .jpg recommended"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image (Mobile)",
+          "info": "600 x 800px .jpg recommended"
+        },
+      {
+     "type": "text",
+      "id": "heading_text",
+      "label": "Heading Text",
+      "default": "Shop Now"
+      },
+      {
+      "type": "color",
+      "id": "heading_text_color",
+      "label": "Heading Color",
+      "default": "#000"
+     },
+      {
+     "type": "text",
+      "id": "paragraph_text",
+      "label": "Paragraph Text",
+      "default": "Shirts"
+      },
+      {
+      "type": "color",
+      "id": "paragraph_text_color",
+      "label": "Paragraph Color",
+      "default": "#000"
+     }, {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "text-left",
+              "label": "Left"
+            }, {
+              "value": "text-center",
+              "label": "Center"
+            }, {
+              "value": "text-right",
+              "label": "Right"
+            }
+          ],
+          "default": "text-center"
+        },
+      {
+     "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+      },
+      {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button Background Color",
+      "default": "#000"
+     },
+      {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#fff"
+     },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+   }
+
+    ]
+    }
+  ],
+  "presets" : [
+    {
+      "name": "Custom Collage"
+    }
+  ]
+}
+{% endschema %}

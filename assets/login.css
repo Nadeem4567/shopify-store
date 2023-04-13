@@ -1,0 +1,22 @@
+.email, .password {
+    border-width: 0 0 1px 0;
+    outline: none;
+    padding-right: 5rem;
+  }
+
+  .login_submit_button {
+    width: 90%;
+    padding: 0.9rem 0;
+    text-transform: uppercase;
+    background-color: #37302c;
+    color: #fff;
+    border: none;
+  }
+
+  .login_submit_button:hover {
+    background: #a9a9a9;
+  }
+
+  .login_submit {
+    margin: 2rem 0;
+  }

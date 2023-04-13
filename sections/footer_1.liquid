@@ -1,0 +1,226 @@
+<link rel="stylesheet" href="{{ 'footer.css' | asset_url }}">
+
+<footer class="">
+  {% if section.blocks.size > 0 %}
+    <div class="footer-blocks">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {%- when '@app' -%}
+            {% render block %}
+
+          {% when 'contact_block' %}
+            <div>
+              <h2>{{ block.settings.contact_heading }}</h2>
+              <div>{{ block.settings.contact_paragraph }}</div>
+              <div>{{ block.settings.contact_email }}</div>
+            </div>
+            <hr class="rule">
+
+          {% when 'footer_menu' %}
+            {% form 'customer', id: 'footer_contact_form', class: 'footer_contact_form' %}
+              <div class="footer-menu">
+                <h2>{{ block.settings.footer_list_title }}</h2>
+                {% for child in block.settings.menu.links %}
+                  <ul>
+                    <a href="{{ child.url }}">
+                      <li>{{ child.title }}</li>
+                    </a>
+                  </ul>
+                {% endfor %}
+              </div>
+            {% endform %}
+            <hr class="rule">
+
+          {%- when 'newsletter_block' -%}
+            <div>
+              <h2>{{ block.settings.newsletter_heading }}</h2>
+              <input
+                type="email"
+                name="contact[email]"
+                class="field__input"
+                value="{{ form.email }}"
+                aria-required="true"
+                autocorrect="off"
+                autocapitalize="off"
+                autocomplete="email"
+                {% if form.errors %}
+                  autofocus
+                  aria-invalid="true"
+                  aria-describedby="ContactFooter-error"
+                {% elsif form.posted_successfully? %}
+                  aria-describedby="ContactFooter-success"
+                {% endif %}
+                placeholder="{{ block.settings.placeholder_text }}"
+                required
+              >
+              <button
+                type="submit"
+                name="subscribe"
+                id="subscribe"
+                href="#"
+                class="input__field-button"
+              >
+                {{ block.settings.button_text | upcase }}
+              </button>
+            </div>
+            <hr class="rule">
+
+          {% when 'social_block' %}
+            <div>
+              <h2>{{ block.settings.social_heading }}</h2>
+              <div class="social-icons flex align-center">
+                {% render 'icon-facebook' %}
+                {% render 'icon-twitter' %}
+                {% render 'icon-instagram' %}
+                {% render 'icon-tiktok' %}
+              </div>
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+    <hr class="rule">
+
+    <div class="flex column align-end payment-section">
+      <div>
+        <span>&copy;{{ 'now' | date: '%Y' }}, {{ shop.name | link_to: '/' }}</span>
+        <span> | Flow - Theme - Cannes</span>
+        <span>{{ powered_by_link }}</span>
+      </div>
+      <div>
+        {%- if section.settings.payment_enable -%}
+          <ul class="flex">
+            {%- for type in shop.enabled_payment_types -%}
+              <li>{{ type | payment_type_svg_tag }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</footer>
+
+{% style %}
+  footer {
+    background-color: {{ section.settings.background_color }}
+  }
+
+  .input__field-button {
+      background-color: {{ section.settings.button_background_color }};
+      color: {{ section.settings.button_text_color }};
+      margin-top: 1.25rem;
+      padding: 1rem 2.5rem;
+    }
+{% endstyle %}
+
+{% schema %}
+{
+  "name" : "footer",
+  "tag" : "footer",
+  "class" : "footer",
+  "settings":[
+    {
+      "type": "checkbox",
+      "id": "payment_enable",
+      "label": "Show Payment Logos",
+      "default": true
+     },
+    {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color",
+          "default": "#f7efed"
+        },
+     {
+          "type": "color",
+          "id": "button_background_color",
+          "label": "Newsletter Form Button Background Color",
+          "default": "#37302c"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Newsletter Form Button Text Color",
+          "default": "#fff"
+        }
+  ],
+  "blocks" : [
+    {
+      "type" : "contact_block",
+      "name" : "Contact Block",
+      "settings" : [
+        {
+          "type": "text",
+          "id": "contact_heading",
+          "label": "Heading",
+          "default": "Contact us"
+        },
+        {
+          "type": "textarea",
+          "id": "contact_paragraph",
+          "label": "Contact Paragraph",
+          "default": "<p>Shorditch High Street<br />London, UK<br />L1 3HG</p>"
+        },
+        {
+          "type": "text",
+          "id": "contact_email",
+          "label": "Email",
+          "default": "enquiry@wizaah.com"
+        }
+      ]
+    },
+    {
+      "type" : "footer_menu",
+      "name" : "Footer Menu",
+      "settings" : [
+        {
+          "type": "text",
+          "id": "footer_list_title",
+          "label": "Footer List Title",
+          "default": "Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type" : "newsletter_block",
+      "name" : "Newsletter Block",
+      "settings" : [
+         {
+          "type": "text",
+          "id": "newsletter_heading",
+          "label": "Heading",
+          "default": "Newsletter"
+        },
+         {
+          "type": "text",
+          "id": "placeholder_text",
+          "label": "Input Placeholder",
+          "default": "email@example.com"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Subscribe"
+        }
+      ]
+    },
+    {
+      "type" : "social_block",
+      "name" : "Social Block",
+      "settings" : [
+        {
+          "type": "text",
+          "id": "social_heading",
+          "label": "Heading",
+          "default": "Get connected"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

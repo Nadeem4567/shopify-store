@@ -1,0 +1,79 @@
+{% for block in section.blocks %}
+  <div class="annoucement_bar_container">
+    <p class="center text-{{ block.id }} {{ block.settings.text_alignment }}">{{ block.settings.annoucement_text }}</p>
+  </div>
+{% endfor %}
+
+{% style %}
+  .annoucement_bar_container {
+    background-color: {{ section.settings.background_color }};
+    padding: 0.1rem 0;
+  }
+
+  {% for block in section.blocks %}
+    .text-{{ block.id }} { color: {{ block.text_color }}; }
+  {% endfor %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Annoucement Bar",
+  "tag" : "section",
+  "class" : "annoucement section",
+  "settings" : [
+    {
+          "type": "color",
+           "id": "background_color",
+          "label": "Background Color",
+          "default": "#f7e6e6"
+        }
+  ],
+  "blocks": [
+    {
+      "name" : "annoucement block",
+      "type" : "annoucement_block",
+      "settings" : [
+        {
+          "type": "text",
+          "id": "annoucement_text",
+          "default": "Free shipping when you spend 999 or more",
+          "label": "Annoucement Bar Text"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center",
+          "label": "Center"
+        },
+        {
+          "type": "color",
+           "id": "text_color",
+          "label": "Text Color",
+          "default": "#fff"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "annoucement_block"
+      }
+    ]
+  }
+}
+{% endschema %}

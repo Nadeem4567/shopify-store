@@ -1,0 +1,28 @@
+.collage-container {
+/*   display: grid;
+  grid-template-columns: auto auto; */
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+}
+
+.collage-content {
+  width: 50%;
+}
+
+@media screen and (max-width: 749px) {
+  .collage-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 5rem;
+  }
+
+  .collage-content {
+  width: 100%;
+  }
+
+  .collage-content-3 {
+    height: auto;
+  }
+
+}

@@ -1,0 +1,83 @@
+<link
+  rel="stylesheet"
+  href="{{ 'product-broad-description-section.css' | asset_url }}"
+  media="print"
+  onload="this.media='all'"
+>
+
+<div class="page-width">
+  <div class="visible_description_paragraph">
+    {{ section.settings.visible_product_description }}
+  </div>
+  <div class="opaque_description_paragraph none">
+    {{ section.settings.opaque_product_description }}
+  </div>
+  <div class="open-button flex justify-center align-center">
+    <a href="#">{{ section.settings.readmore_text }}</a>
+    <div class="icon">{% render 'icon-arrow-down' %}</div>
+  </div>
+  <div class="close-button flex justify-center align-center none">
+    <a href="#">{{ section.settings.readless_text }}</a>
+    <div class="icon">{% render 'icon-arrow-up' %}</div>
+  </div>
+</div>
+
+<script>
+  let visible_para = document.querySelector('.visible_description_paragraph')
+  let opaque_para = document.querySelector('.opaque_description_paragraph')
+
+  let open_button = document.querySelector(".open-button")
+  let close_button = document.querySelector(".close-button")
+
+  open_button.addEventListener('click', () => {
+   opaque_para.classList.remove('none');
+   open_button.classList.add('none');
+   close_button.classList.remove('none');
+  })
+
+  close_button.addEventListener('click', () => {
+   opaque_para.classList.add('none');
+   open_button.classList.remove('none');
+   close_button.classList.add('none');
+  })
+</script>
+
+{% schema %}
+{
+  "name": "Broad Product Description",
+  "tag" : "section",
+  "class" : "productpage section",
+  "settings": [
+    {
+     "type": "textarea",
+     "id": "visible_product_description",
+     "label": "Visible Product Description",
+     "default": "<p>Relaxed boyfriend fit shirt dress in sand stripe soft and travel-friendly, wrinkle-resistant cotton blend shirting, features a classic open collar, full-button placket, and a shirttail hem.</p>"
+   },
+   {
+     "type": "textarea",
+     "id": "opaque_product_description",
+     "label": "Opaque Product Description",
+     "default": "<p>Please note we do not offer exchange or refund on embroidered items as the garment is customised.<br>This is a demo store. This product can be bought on </p>"
+   },
+   {
+     "type": "text",
+     "id": "readmore_text",
+     "label": "Read More Text",
+     "default": "Read More"
+   },
+   {
+     "type": "text",
+     "id": "readless_text",
+     "label": "Read Less Text",
+     "default": "Read Less"
+   }
+  ],
+  "presets":
+    [
+      {
+        "name" : "Broad Product Description"
+      }
+    ]
+}
+{% endschema %}

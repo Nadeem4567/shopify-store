@@ -1,0 +1,32 @@
+.main__container {
+  margin-top: 12rem;
+}
+
+.review-heading-container {
+}
+
+.customer-action-text {
+  align-self: flex-end;
+  border-bottom: 1px solid #000;
+}
+
+.report-text {
+  align-self: flex-end;
+  border-bottom: 1px solid #000;
+}
+
+.page-number {
+  text-align: center;
+  gap: 2rem;
+  margin-top: -6rem;
+}
+
+.page-number > span {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 749px){
+  .page-number {
+    margin-top: 0;
+  }
+}

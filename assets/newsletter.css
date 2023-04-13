@@ -1,0 +1,53 @@
+.newsletter-main-container {
+  padding: 4rem 0;
+}
+
+.newsletter-container {
+      width: 85%;
+      justify-content: space-around;
+      margin: 0 auto;
+}
+
+input {
+/*       padding: 0.5rem 17rem; */
+      padding: 0.5rem 0;
+      padding-right: 37rem;
+      outline: none;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #fff;
+      position: relative;
+}
+
+/*   .input > label {
+      position: absolute;
+    } */
+
+    .arrow-icon {
+      fill: #fff;
+      margin-left: -3.25rem;
+}
+
+@media screen and (min-width: 550px) {
+  input {
+    position: relative;
+    right: 3.2rem;
+  }
+}
+
+
+@media screen and (max-width: 549px) {
+  .newsletter-container {
+    flex-direction: column;
+    padding: 0 3rem;
+    justify-content: center;
+  }
+
+  input {
+      padding: 0;
+      padding-right: 4.5rem;
+  }
+
+  .arrow-button {
+  }
+}

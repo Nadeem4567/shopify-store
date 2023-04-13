@@ -1,0 +1,49 @@
+.slideshow__wrapper{
+    position: relative;
+  }
+  
+  .slideshow__content{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .max-width{
+/*     width: 500px; */
+    width: 55rem;
+  }
+  
+  .height-full{
+    height: 100%;
+  }
+
+  .button-container {
+    display: flex;
+    align-items: center;
+  }
+
+.flickity-page-dots {
+     bottom: 10.5rem;
+   }
+
+   .flickity-button {
+     display: none;
+   }
+
+   .flickity-page-dots .dot {
+     opacity: 0.5;
+   }
+
+@media screen and (max-width: 549px) {
+  .flickity-page-dots {
+     bottom: 1.75rem;
+   }
+
+   .flickity-page-dots .dot {
+     opacity: 1;
+     background: #fff;
+     boder: 1px solid #fff;
+   }
+}
