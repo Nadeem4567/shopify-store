@@ -1,42 +1,123 @@
-<link rel="stylesheet" href="{{ 'login.css' | asset_url }}" media="print" onload="this.media='all'">
-
-<div class="flex align-center justify-center">
-  <div class="login-form">
-    <h2 class="">LOGIN</h2>
-    {% form 'customer_login' %}
+<div class="account_container flex align-center justify-center">
+  <div class="account_content customer_register_form hidden">
+    {% form 'create_customer' %}
       {{ form.errors | default_errors }}
 
+      <div class="first-name">
+        <label for="first-name">First name</label>
+        <input type="text" name="customer[first_name]">
+      </div>
+
+      <div class="last-name">
+        <label for="last-name">Last name</label>
+        <input type="text" name="customer[last_name]">
+      </div>
+
       <div class="email">
-        <input class="email" type="email" name="customer[email]" Placeholder="Email">
+        <label for="email">Email</label>
+        <input type="email" name="customer[email]">
       </div>
 
       <div class="password">
-        <input class="password" type="password" name="customer[password]" Placeholder="Password">
+        <label for="password">Password</label>
+        <input type="password" name="customer[password]">
       </div>
 
-      <div class="submit login_submit">
-        <input class="login_submit_button" type="submit" value="Sign in">
+      <div class="submit">
+        <input type="submit" value="Create">
+      </div>
+    {% endform %}
+  </div>
+
+  <div class="account_content reset_password_form hidden">
+    {% form 'reset_customer_password' %}
+      {{ form.errors | default_errors }}
+
+      <div class="password">
+        <label for="password">Password</label>
+        <input type="password" name="customer[password]">
       </div>
 
-      <div class="create-account-button text-center point">
-        <a href="{{ routes.account_register_url }}">Create Account</a>
+      <div class="password_confirm">
+        <label for="password_confirmation">Password confirmation</label>
+        <input type="password" name="customer[password_confirmation]">
       </div>
 
-      <div class="text-center point"><a href="#">Forgot your password?</a></div>
+      <div class="submit">
+        <input type="submit" value="Reset password">
+      </div>
+    {% endform %}
+  </div>
+
+  <div class="account_content login_form flex column">
+    {% form 'customer_login' %}
+      {{ form.errors | default_errors }}
+
+      <div class="email login_form-items">
+        <input class="email" type="email" name="customer[email]" placeholder="Email">
+      </div>
+
+      <div class="password login_form-items">
+        <input class="password" type="password" name="customer[password]" placeholder="Password">
+      </div>
+
+      <div class="login_form-items">
+        <input type="submit" value="Sign in" class="login_form-submit-button">
+      </div>
+      <div class="flex column">
+        <div class="button create_account_button">Create Account</div>
+        <div class="button forgot_password_button">Fogot your password?</div>
+      </div>
     {% endform %}
   </div>
 </div>
 
 <script>
-  let register_button = document.querySelector('.create-account-button');
-  let register_form = document.querySelector('.customer-register-form');
+  let register_button = document.querySelector('.create_account_button');
+  let register_form = document.querySelector('.customer_register_form');
 
-  register_button.addEventListener('click', {
-    register_form.classList.toggle('hidden');
+  register_button.addEventListener('click', () = >{
+    customer_register_form.addEventListener('click', ()=> {
+      if (customer_register_form.classList.contains('hidden') {
+        customer_register_form.classList.remove('hidden')
+      } else {
+        customer_register_form.classList.add('hidden')
+      }
+    })
   })
 </script>
 
 {% style %}
+  .email, .password{
+    border-width: 0 0 1px 0;
+    outline: none;
+    padding-right: 5rem;
+  }
+
+  .account_container {
+    height: 100vh;
+  }
+
+  .account_content {
+    padding: 2rem 0;
+  }
+
+  .login_form-items {
+    margin: 2rem 0;
+  }
+
+  .login_form-submit-button {
+    background-color: #37302c;
+    color: #fff;
+    padding: 1rem 4rem;
+    border: none;
+    width: 85%;
+  }
+
+  .create_account_button {
+    display: inline-block;
+    text-align: center;
+  }
 {% endstyle %}
 
 {% schema %}
